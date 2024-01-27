@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.HomeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical"
+        android:gravity="top">
+
+        <EditText
+            android:id="@+id/titleWorkingHours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:text="Arbeitszeit:" />
+
+        <Chronometer
+            android:id="@+id/view_timer"
+            android:layout_width="match_parent"
+            android:layout_height="104dp"
+            android:textAlignment="center"
+            android:textSize="60sp"
+            tools:targetApi="24" />
+
+        <EditText
+            android:id="@+id/titleRemainingHours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:text="noch zu leistende Arbeitszeit:" />
+
+        <Chronometer
+            android:id="@+id/view_downtimer"
+            android:layout_width="match_parent"
+            android:layout_height="104dp"
+            android:textAlignment="center"
+            android:textSize="60sp"
+            tools:targetApi="24" />
+
+
+        <ToggleButton
+            android:id="@+id/btnStartStop"
+            android:layout_width="match_parent"
+            android:layout_height="93dp"
+            android:text="ToggleButton"
+            android:textOff="START"
+            android:textOn="STOP"/>
+
+        <TextView
+            android:id="@+id/txtCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"/>
+
+        <TextView
+            android:id="@+id/txtSum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"/>
+
+        <TextView
+            android:id="@+id/txtDays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"/>
+
+        <TextView
+            android:id="@+id/txtWeeklyWorkingHours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"/>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
