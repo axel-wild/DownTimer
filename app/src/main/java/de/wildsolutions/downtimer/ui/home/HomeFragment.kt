@@ -18,6 +18,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.String
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.OffsetDateTime
+import java.time.Period
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 /**
@@ -61,10 +70,9 @@ class HomeFragment : Fragment(), View.OnClickListener  {
             var lastTiming : Timing = timingDao.getLast()
             // timer is running
             if(lastTiming != null) {
-                val stop: Long = if (lastTiming.stop == null) 0L else lastTiming.stop!!
-                if (stop == 0L) {
-                    isWorking = true
-                    startTimerOnCreate(lastTiming)
+                if (lastTiming.isRunning()) {
+                    this@HomeFragment.isWorking = true
+                    checkTimerOnCreate(lastTiming)
                 }
             }
             updateView()
@@ -103,8 +111,7 @@ class HomeFragment : Fragment(), View.OnClickListener  {
                 if (!isWorking) {
                     isWorking = true
                     var timing = Timing()
-                    var millis = System.currentTimeMillis()
-                    timing.start = millis
+                    timing.start()
                     lifecycleScope.launch(Dispatchers.IO) {
                         timingDao.insert(timing)
                         sumMillis = timingDao.sum()
@@ -121,7 +128,7 @@ class HomeFragment : Fragment(), View.OnClickListener  {
                     isWorking = false
                     lifecycleScope.launch(Dispatchers.IO) {
                         var timing = timingDao.getLast()
-                        timing.stop = System.currentTimeMillis()
+                        timing.stop()
                         timingDao.update(timing)
                     }
                 }
@@ -172,15 +179,31 @@ class HomeFragment : Fragment(), View.OnClickListener  {
         txtWeeklyWorkingHours.setText("wöchentliche Arbeitszeit: " + hmsWeeklyWorkingMillis)
     }
 
-    fun startTimerOnCreate(timing : Timing) {
+    /**
+     * Check timer after startup. If measurement started a day before, terminate it. If measuremnt started today and has not been stopped manually, continue it.
+     */
+    fun checkTimerOnCreate(timing : Timing) {
         val meter = binding.viewTimer
         val downMeter = binding.viewDowntimer
         val db = AppDatabase.getInstance(requireContext())
-        meter.base = SystemClock.elapsedRealtime() - db.timingDao().sum()
-        meter.start()
-        downMeter.base = SystemClock.elapsedRealtime() - db.timingDao().sum() + dataStore.getTotalTimeToWorkMillis()
-        downMeter.isCountDown = true
-        downMeter.start()
+
+        // check, when measurment has been started
+        if(timing.startedToday()){
+            // continue
+            meter.base = SystemClock.elapsedRealtime() - db.timingDao().sum()
+            meter.start()
+            downMeter.base = SystemClock.elapsedRealtime() - db.timingDao().sum() + dataStore.getTotalTimeToWorkMillis()
+            downMeter.isCountDown = true
+            downMeter.start()
+            this@HomeFragment.isWorking = true
+        }
+        else{
+            // terminate
+            timing.stop()
+            db.timingDao().update(timing)
+            this@HomeFragment.isWorking = false
+        }
+        this.updateView()
     }
 
     fun millisTimeFormat(millis : Long) : kotlin.String {

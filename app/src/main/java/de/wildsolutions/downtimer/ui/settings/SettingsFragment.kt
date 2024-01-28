@@ -64,7 +64,6 @@ class SettingsFragment : Fragment() {
         binding.inCreditHours.setText(dataStore.getCreditHours().toString())
         binding.inFreeDays.setText(dataStore.getFreeDays().toString())
         binding.dateStart.init(dateStart.year, dateStart.monthValue-1, dateStart.dayOfMonth, null)
-        //binding.dateStart.init(calStart.get(Calendar.YEAR), calStart.get(Calendar.MONTH), calStart.get(Calendar.DAY_OF_MONTH), null)
         binding.dateEnd.init(dateEnd.year, dateEnd.monthValue-1, dateEnd.dayOfMonth, null)
 
         binding.btnCommit.setOnClickListener(){
