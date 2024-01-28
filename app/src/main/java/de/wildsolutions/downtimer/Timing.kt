@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -63,5 +64,21 @@ data class Timing(
     fun startedToday() : Boolean {
         val startDate : LocalDate = Instant.ofEpochMilli(this.start).atZone(ZoneId.systemDefault()).toLocalDate()
         return Period.between(LocalDate.now(), startDate).isZero
+    }
+
+    fun toListString() : kotlin.String {
+        var startF = this.millisTimeFormat(this.start, "yyyy-MM-dd HH:mm")
+        var stopF = this.millisTimeFormat(this.stop, "yyyy-MM-dd HH:mm")
+        return this.id.toString() + ". " + startF + " - " + stopF
+    }
+
+    fun millisTimeFormat(millis : Long?, format : kotlin.String) : kotlin.String {
+        val formatter = SimpleDateFormat(format)
+        if(millis != null) {
+            return formatter.format(millis)
+        }
+        else{
+            return ""
+        }
     }
 }

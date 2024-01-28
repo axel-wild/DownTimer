@@ -16,8 +16,6 @@ import de.wildsolutions.downtimer.databinding.FragmentSettingsBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.ZoneOffset
-import java.util.Calendar
 
 /**
  *
@@ -47,9 +45,6 @@ class SettingsFragment : Fragment() {
 
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        val calStart = Calendar.getInstance()
-        val calEnd = Calendar.getInstance()
 
         dataStore = DataStoreManager.getInstance(this.requireContext())
 

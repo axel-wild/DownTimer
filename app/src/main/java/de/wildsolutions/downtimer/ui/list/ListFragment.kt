@@ -3,7 +3,6 @@ package de.wildsolutions.downtimer.ui.list
 import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,6 @@ import de.wildsolutions.downtimer.DataStoreManager
 import de.wildsolutions.downtimer.Timing
 import de.wildsolutions.downtimer.TimingDao
 import de.wildsolutions.downtimer.databinding.FragmentListBinding
-import de.wildsolutions.downtimer.ui.home.HomeFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -95,9 +93,7 @@ class ListFragment : Fragment(), TimePickerDialog.OnTimeSetListener{
 
             for (i in 0 until items.size) {
                 val timing = items[i]
-                var start = this@ListFragment.millisTimeFormat(timing.start, "yyyy-MM-dd HH:mm")
-                var end = this@ListFragment.millisTimeFormat(timing.stop, "yyyy-MM-dd HH:mm")
-                listItems[i] = timing.id.toString() + " " + start + " - " + end.toString()
+                listItems[i] = timing.toListString()
             }
             val adapter = ArrayAdapter(this@ListFragment.requireContext(), android.R.layout.simple_list_item_1, listItems)
             getActivity()?.runOnUiThread(){
@@ -136,19 +132,6 @@ class ListFragment : Fragment(), TimePickerDialog.OnTimeSetListener{
         alertDialog = alertDialogBuilder.create()
         alertDialog?.show()
     }
-
-
-    fun millisTimeFormat(millis : Long?, format : kotlin.String) : kotlin.String {
-        val formatter = SimpleDateFormat(format)
-        if(millis != null) {
-            return formatter.format(millis)
-        }
-        else{
-            return ""
-        }
-    }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
